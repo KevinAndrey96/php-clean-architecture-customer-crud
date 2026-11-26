@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-customer_crud}
+      MYSQL_USER: ${DB_USER:-customer_crud}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in .env}
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      DB_DSN: mysql:host=db;port=3306;dbname=${DB_NAME:-customer_crud};charset=utf8mb4
+      DB_USER: ${DB_USER:-customer_crud}
+      DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
