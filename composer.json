@@ -1,0 +1,44 @@
+{
+    "name": "kevinandrey96/php-clean-architecture-customer-crud",
+    "description": "Customer registry CRUD in framework-free PHP 8.2+ with Clean Architecture, PDO, DIAN NIT check digit validation, CSRF protection and Docker.",
+    "type": "project",
+    "license": "MIT",
+    "keywords": ["php", "crud", "clean-architecture", "pdo", "mysql", "nit", "dian", "colombia"],
+    "authors": [
+        {
+            "name": "Kevin Andrey Herrera Silva",
+            "email": "kahs_kevin@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "CustomerCrud\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CustomerCrud\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse --memory-limit=512M",
+        "check": ["@analyse", "@test"]
+    }
+}
